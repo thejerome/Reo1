@@ -8,7 +8,8 @@ function init_lab() {
     var MAX_PRESSURE_DROP = 500;
     var tube_radius = MIN_TUBE_RADIUS;
     var pressure_drop = MIN_PRESSURE_DROP;
-    var default_var = {
+    var viscosity_coefficient = 0;
+    var default_variant = {
         tau_gamma_values: [
             [0, 0], [34, 7], [65, 25], [78, 39], [88, 45], [98, 56], [120, 61], [132, 74], [152, 88], [170, 95]
         ],
@@ -16,7 +17,7 @@ function init_lab() {
         needed_Q: 1.2,
         ro: 1.386
     };
-    var default_calculate_data;
+    var default_calculate_data = {Q: 1.386};
     var lab_var;
     var window =
         '<div class="vlab_setting">' +
@@ -29,7 +30,7 @@ function init_lab() {
         '<div class="control_density">Плотность &#961;:<span class="density_value value"></span><sup>кг</sup>/<sub>м<sup>3</sup></sub></div>' +
         '<div class="control_needed_volume">Требуемый объёмный расход <i>Q</i>: <span class="needed_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div>' +
         '<label class="control_viscosity_coefficient">Коэффициент динамической вязкости жидкости &#956;: ' +
-        '<input type="number" step="0.001" value="0" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
+        '<input type="number" min="0" step="0.01" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
         '</div>' +
         '<div class="block_viscosity_table"><table><tbody><tr><td>Напряжение сдвига &#964;<sub>i</sub>, Па</td></tr><tr><td>Скорость сдвига &#947;<sub>i</sub>, с<sup>-1</sup></td></tr></tbody></table></div>' +
         '<div class="block_tube_installation"><div class="tube_installation_control">' +
@@ -44,6 +45,7 @@ function init_lab() {
         '<input type="button" class="btn btn_play" value="Запустить" />' +
         '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
         '<div class="block_help">Справка</div>' +
+        '<div class="block_loading"><div class="block_loading_title">Выполняется вычисление</div><div class="waiting_loading"></div></div>' +
         '</div>';
 
     function show_help() {
@@ -178,14 +180,14 @@ function init_lab() {
         if (tangent) {
             var lineFunc = d3.svg.line()
                 .x(function (d) {
-                    return x_range(d[0]);
+                    return x_range(d[1]);
                 })
                 .y(function (d) {
-                    return x_range(d[0]) * tangent;
-                })
-                .interpolate('basis');
+                    return y_range(d[1]*tangent);
+                });
             plot.append("svg:path")
-                .attr("d", lineFunc(data))
+                .datum(data)
+                .attr("d", lineFunc)
                 .attr("stroke", "blue")
                 .attr("stroke-width", 2)
                 .attr("fill", "none");
@@ -204,9 +206,19 @@ function init_lab() {
         }
         draw_tube($(".tube_canvas"));
     }
+
+    function freeze_installation(){
+        $(".block_loading").addClass("active_waiting");
+    }
+
+    function unfreeze_installation(){
+        $(".block_loading").removeClass("active_waiting");
+    }
     
     function launch() {
+        freeze_installation();
         // ANT.calculate();
+        setTimeout(Vlab.calculateHandler, 3000)
     }
 
     function parse_variant(str, def_obj) {
@@ -244,9 +256,9 @@ function init_lab() {
     function get_variant() {
         var variant;
         if ($("#preGeneratedCode") !== null) {
-            variant = parse_variant($("#preGeneratedCode").val(), default_var);
+            variant = parse_variant($("#preGeneratedCode").val(), default_variant);
         } else {
-            variant = default_var;
+            variant = default_variant;
         }
         return variant;
     }
@@ -290,19 +302,26 @@ function init_lab() {
                 launch();
             });
             $(".viscosity_coefficient_value").change(function () {
+                if ($(this).val() < 0) {
+                    $(this).val(0)
+                }
+                viscosity_coefficient = $(this).val();
                 init_plot(lab_var.tau_gamma_values, ".block_viscosity_plot svg",
                     $(".block_viscosity_plot svg").attr("width"), $(".block_viscosity_plot svg").attr("height"), $(this).val());
             })
         },
         calculateHandler: function () {
             lab_animation_data = parse_calculate_results(arguments[0], default_calculate_data);
+            $(".result_volume").css("visibility", "visible");
+            $(".result_volume_value").html(lab_animation_data.Q);
+            unfreeze_installation();
         },
         getResults: function () {
-            var answer = {};
+            var answer = {mu: viscosity_coefficient, delta_p: pressure_drop, tube_radius: tube_radius};
             return JSON.stringify(answer);
         },
         getCondition: function () {
-            var condition = {};
+            var condition = {mu: viscosity_coefficient, delta_p: pressure_drop, tube_radius: tube_radius};
             return JSON.stringify(condition);
         }
     }

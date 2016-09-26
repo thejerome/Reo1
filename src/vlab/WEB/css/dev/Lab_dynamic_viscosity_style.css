@@ -13,6 +13,7 @@
     justify-content: space-between;
     align-items: flex-start;
     overflow: auto;
+    position: relative;
 }
 
 .block_title {
@@ -169,6 +170,7 @@
     margin-left: 50%;
     font-weight: bold;
     font-size: 18px;
+    visibility: hidden;
 }
 
 .block_help {
@@ -237,15 +239,43 @@
     border-color: #FCD192;
 }
 
+.block_loading {
+    display: none;
+}
+
 .waiting_loading {
     display: none;
 }
 
-.pendulum_graphics.active_waiting .waiting_loading {
+.block_loading.active_waiting {
+    width: 100%;
+    height: 670px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: auto;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.block_loading_title {
+    margin: 0 230px 30px 230px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.block_loading.active_waiting .waiting_loading {
     display: block;
     padding: 0;
-    width: 38px;
-    height: 38px;
+    width: 70px;
+    height: 70px;
+    z-index: 11;
     background-size: contain;
     background-image: url(img/Lab_dynamic_viscosity_hourglass.png);
     background-repeat: no-repeat;
