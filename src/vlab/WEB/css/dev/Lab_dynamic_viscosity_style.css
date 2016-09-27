@@ -126,6 +126,7 @@
 .tube_installation_control {
     position: absolute;
     top: 0;
+    width: 80%;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -262,12 +263,6 @@
     align-content: center;
     justify-content: center;
     align-items: center;
-}
-
-.block_loading_title {
-    margin: 0 230px 30px 230px;
-    font-size: 28px;
-    font-weight: bold;
 }
 
 .block_loading.active_waiting .waiting_loading {

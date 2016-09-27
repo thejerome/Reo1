@@ -18,7 +18,10 @@ function init_lab() {
         ro: 1.386
     };
     var default_calculate_data = {Q: 1.386};
+    var radius_coefficient;
+    var pressure_coefficient;
     var lab_var;
+    var timeout_jelly_running;
     var window =
         '<div class="vlab_setting">' +
         '<div class="block_title">' +
@@ -41,11 +44,11 @@ function init_lab() {
         'step="1" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '"/>' +
         '<input class="control_pressure_drop_value value" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '" type="number" step="1"/>кПа' +
         '</div></div>' +
-        '<div class="canvas_container"><canvas width="660px" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
+        '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
         '<input type="button" class="btn btn_play" value="Запустить" />' +
         '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
         '<div class="block_help">Справка</div>' +
-        '<div class="block_loading"><div class="block_loading_title">Выполняется вычисление</div><div class="waiting_loading"></div></div>' +
+        '<div class="block_loading"><div class="waiting_loading"></div></div>' +
         '</div>';
 
     function show_help() {
@@ -60,16 +63,47 @@ function init_lab() {
         }
     }
 
-    function draw_tube(canvas_selector){
+    function draw_tube(canvas_selector, radius_coefficient, pressure_coefficient){
         var canvas = canvas_selector[0];
         var ctx = canvas.getContext("2d");
         ctx.globalCompositeOperation = 'source-over';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#4f5e6d';
-        ctx.strokeStyle = '#000000';
+        ctx.strokeStyle = '#003300';
         ctx.save();
         ctx.translate(0, 110);
-        ctx.fillRect(0, 0, 660, 60);
+        ctx.fillRect(0, 0, $(".tube_canvas").attr("width"), 15 + 55/100*radius_coefficient);
+        ctx.fillStyle = '#003300';
+        ctx.fillRect(0, 0, $(".tube_canvas").attr("width"), 5);
+        ctx.fillRect(0, 10 + 55/100*radius_coefficient, $(".tube_canvas").attr("width"), 5);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(55, 5);
+        ctx.moveTo(55, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(110, 5);
+        ctx.moveTo(110, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(165, 5);
+        ctx.moveTo(165, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(220, 5);
+        ctx.moveTo(220, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(275, 5);
+        ctx.moveTo(275, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(330, 5);
+        ctx.moveTo(330, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(385, 5);
+        ctx.moveTo(385, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(440, 5);
+        ctx.moveTo(440, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(495, 5);
+        ctx.moveTo(495, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(550, 5);
+        ctx.moveTo(550, 10 + 55/100*radius_coefficient);
+        ctx.lineTo(605, 5);
+        ctx.moveTo(605, 10 + 55/100*radius_coefficient);
+        ctx.lineTo($(".tube_canvas").attr("width"), 5);
+        ctx.stroke();
+        ctx.restore();
         ctx.translate(610, -20);
         ctx.fillStyle = '#003300';
         ctx.fillRect(0, 0, 3, 20);
@@ -82,21 +116,49 @@ function init_lab() {
         ctx.stroke();
         ctx.translate(0.5, -30);
         ctx.fillStyle = '#cccccc';
-        ctx.fillRect(0, 0, 2, 23);
+        ctx.save();
+        ctx.rotate(Math.PI/6 + 10*Math.PI/6/100*pressure_coefficient);
         ctx.beginPath();
-        ctx.arc(1, 0, 4, 0, 2 * Math.PI, false);
+        ctx.lineTo(1.5, 0);
+        ctx.lineTo(1.5, 21);
+        ctx.lineTo(0, 23);
+        ctx.lineTo(-1.5, 21);
+        ctx.lineTo(-1.5, 0);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+        ctx.restore();
+        ctx.beginPath();
+        ctx.arc(1, 0, 5, 0, 2 * Math.PI, false);
         ctx.fillStyle = '#003300';
         ctx.fill();
-        ctx.translate(0, 25);
         ctx.fillStyle = '#de5e5e';
-        ctx.fillRect(0, 0, 2, 3);
-        ctx.translate(-27, -25);
-        ctx.fillRect(0, 0, 3, 2);
-        ctx.translate(27, -25);
-        ctx.fillRect(0, 0, 2, -3);
-        ctx.translate(27, 25);
-        ctx.fillRect(0, 0, 3, 2);
+        ctx.beginPath();
+        ctx.arc(-13.5, 23.3, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(13.5, 23.5, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, -27, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(-25.5, -3, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(26, -3, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
         ctx.restore();
+    }
+
+    function run_jelly(canvas_selector, radius_coefficient, jelly_bound) {
+        var canvas = canvas_selector[0];
+        var ctx = canvas.getContext("2d");
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = '#f486a0';
+        ctx.fillRect(0, 115, jelly_bound, 5 + 55/100*radius_coefficient);
+        if (jelly_bound <= $(".tube_canvas").attr("width")){
+            timeout_jelly_running = setTimeout(function(){run_jelly(canvas_selector, radius_coefficient, parseInt(jelly_bound)+2)}, 2);
+        }
     }
 
     function change_tube_radius_value() {
@@ -204,21 +266,26 @@ function init_lab() {
             $(".block_viscosity_table tr:first-child").append("<td>" + generate_data.tau_gamma_values[i][0] + "</td>");;
             $(".block_viscosity_table tr:nth-child(2)").append("<td>" + generate_data.tau_gamma_values[i][1] + "</td>");;
         }
-        draw_tube($(".tube_canvas"));
+        radius_coefficient = create_radius_coefficient(MIN_TUBE_RADIUS);
+        pressure_coefficient = create_pressure_coefficient(MIN_PRESSURE_DROP);
+        draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
     }
 
     function freeze_installation(){
         $(".block_loading").addClass("active_waiting");
+        run_jelly($(".tube_canvas"), radius_coefficient, 10);
     }
 
     function unfreeze_installation(){
+        clearTimeout(timeout_jelly_running);
+        draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
         $(".block_loading").removeClass("active_waiting");
     }
     
     function launch() {
         freeze_installation();
         // ANT.calculate();
-        setTimeout(Vlab.calculateHandler, 3000)
+        setTimeout(Vlab.calculateHandler, 5000);
     }
 
     function parse_variant(str, def_obj) {
@@ -267,6 +334,18 @@ function init_lab() {
 
     }
 
+    function create_radius_coefficient(current_radius){
+        var coefficient;
+        coefficient = (current_radius-MIN_TUBE_RADIUS)*100/(MAX_TUBE_RADIUS-MIN_TUBE_RADIUS);
+        return coefficient;
+    }
+
+    function create_pressure_coefficient(current_pressure){
+        var coefficient;
+        coefficient = (current_pressure-MIN_PRESSURE_DROP)*100/(MAX_PRESSURE_DROP-MIN_PRESSURE_DROP);
+        return coefficient;
+    }
+
     return {
         init: function () {
             lab_var = get_variant();
@@ -278,9 +357,13 @@ function init_lab() {
             });
             $(".control_tube_radius_slider").change(function () {
                 change_tube_radius_value();
+                radius_coefficient = create_radius_coefficient($(this).val());
+                draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
             });
             $(".control_pressure_drop_slider").change(function () {
                 change_pressure_drop_value();
+                pressure_coefficient = create_pressure_coefficient($(this).val());
+                draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
             });
             $(".control_tube_radius_value").change(function () {
                 if ($(this).val() < MIN_TUBE_RADIUS) {
@@ -289,6 +372,8 @@ function init_lab() {
                     $(this).val(MAX_TUBE_RADIUS)
                 }
                 change_tube_radius_slider();
+                radius_coefficient = create_radius_coefficient($(this).val());
+                draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
             });
             $(".control_pressure_drop_value").change(function () {
                 if ($(this).val() < MIN_PRESSURE_DROP) {
@@ -297,12 +382,14 @@ function init_lab() {
                     $(this).val(MAX_PRESSURE_DROP)
                 }
                 change_pressure_drop_slider();
+                pressure_coefficient = create_pressure_coefficient($(this).val());
+                draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
             });
             $(".btn_play").click(function () {
                 launch();
             });
             $(".viscosity_coefficient_value").change(function () {
-                if ($(this).val() < 0) {
+                if ($(this).val() <= 0) {
                     $(this).val(0)
                 }
                 viscosity_coefficient = $(this).val();
