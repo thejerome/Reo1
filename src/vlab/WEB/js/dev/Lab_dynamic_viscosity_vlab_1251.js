@@ -25,29 +25,29 @@ function init_lab() {
         window =
         '<div class="vlab_setting">' +
         '<div class="block_title">' +
-        '<div class="vlab_name">Р’РёСЂС‚СѓР°Р»СЊРЅР°СЏ Р»Р°Р±РѕСЂР°С‚РѕСЂРёСЏ В«РљРѕСЌС„С„РёС†РёРµРЅС‚ РґРёРЅР°РјРёС‡РµСЃРєРѕР№ РІСЏР·РєРѕСЃС‚РёВ»</div>' +
-        '<input class="btn_help btn" type="button" value="РЎРїСЂР°РІРєР°"/></div>' +
+        '<div class="vlab_name">Виртуальная лаборатория «Коэффициент динамической вязкости»</div>' +
+        '<input class="btn_help btn" type="button" value="Справка"/></div>' +
         '<div class="block_viscosity_plot"><svg width="450" height="220"></svg></div>' +
         '<div class="block_control">' +
-        '<div class="control_tube_length">Р”Р»РёРЅР° С‚СЂСѓР±С‹ <i>l</i>:<span class="tube_length_value value"></span>Рј</div>' +
-        '<div class="control_density">РџР»РѕС‚РЅРѕСЃС‚СЊ &#961;:<span class="density_value value"></span><sup>РєРі</sup>/<sub>Рј<sup>3</sup></sub></div>' +
-        '<div class="control_needed_volume">РўСЂРµР±СѓРµРјС‹Р№ РѕР±СЉС‘РјРЅС‹Р№ СЂР°СЃС…РѕРґ <i>Q</i>: <span class="needed_volume_value value"></span><sup>Рј<sup>3</sup></sup>/<sub>СЃ</sub></div>' +
-        '<label class="control_viscosity_coefficient">РљРѕСЌС„С„РёС†РёРµРЅС‚ РґРёРЅР°РјРёС‡РµСЃРєРѕР№ РІСЏР·РєРѕСЃС‚Рё Р¶РёРґРєРѕСЃС‚Рё &#956;: ' +
-        '<input type="number" min="0" step="0.01" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />РџР°&#183;СЃ</label>' +
+        '<div class="control_tube_length">Длина трубы <i>l</i>:<span class="tube_length_value value"></span>м</div>' +
+        '<div class="control_density">Плотность &#961;:<span class="density_value value"></span><sup>кг</sup>/<sub>м<sup>3</sup></sub></div>' +
+        '<div class="control_needed_volume">Требуемый объёмный расход <i>Q</i>: <span class="needed_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div>' +
+        '<label class="control_viscosity_coefficient">Коэффициент динамической вязкости жидкости &#956;: ' +
+        '<input type="number" min="0" step="0.01" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
         '</div>' +
-        '<div class="block_viscosity_table"><table><tbody><tr><td>РќР°РїСЂСЏР¶РµРЅРёРµ СЃРґРІРёРіР° &#964;<sub>i</sub>, РџР°</td></tr><tr><td>РЎРєРѕСЂРѕСЃС‚СЊ СЃРґРІРёРіР° &#947;<sub>i</sub>, СЃ<sup>-1</sup></td></tr></tbody></table></div>' +
+        '<div class="block_viscosity_table"><table><tbody><tr><td>Напряжение сдвига &#964;<sub>i</sub>, Па</td></tr><tr><td>Скорость сдвига &#947;<sub>i</sub>, с<sup>-1</sup></td></tr></tbody></table></div>' +
         '<div class="block_tube_installation"><div class="tube_installation_control">' +
-        '<div><label for="control_tube_radius_slider">Р Р°РґРёСѓСЃ С‚СЂСѓР±С‹ <i>r</i>:</label><input class="control_tube_radius_slider" id="control_tube_radius_slider" type="range" ' +
+        '<div><label for="control_tube_radius_slider">Радиус трубы <i>r</i>:</label><input class="control_tube_radius_slider" id="control_tube_radius_slider" type="range" ' +
         'step="0.01" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '"/>' +
-        '<input class="control_tube_radius_value value" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '" type="number" step="0.01"/>Рј' +
-        '</div><div><label for="control_pressure_drop_slider">РџРµСЂРµРїР°Рґ РґР°РІР»РµРЅРёР№ <i>p</i>:</label><input class="control_pressure_drop_slider" id="control_pressure_drop_slider" type="range" ' +
+        '<input class="control_tube_radius_value value" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '" type="number" step="0.01"/>м' +
+        '</div><div><label for="control_pressure_drop_slider">Перепад давлений <i>p</i>:</label><input class="control_pressure_drop_slider" id="control_pressure_drop_slider" type="range" ' +
         'step="1" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '"/>' +
-        '<input class="control_pressure_drop_value value" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '" type="number" step="1"/>РєРџР°' +
+        '<input class="control_pressure_drop_value value" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '" type="number" step="1"/>кПа' +
         '</div></div>' +
-        '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Р‘СЂР°СѓР·РµСЂ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ canvas</canvas></div>' +
-        '<input type="button" class="btn btn_play" value="Р—Р°РїСѓСЃС‚РёС‚СЊ" />' +
-        '<div class="result_volume">РџРѕР»СѓС‡РµРЅРЅС‹Р№ РѕР±СЉС‘РјРЅС‹Р№ СЂР°СЃС…РѕРґ <i>Q</i>: <span class="result_volume_value value"></span><sup>Рј<sup>3</sup></sup>/<sub>СЃ</sub></div></div>' +
-        '<div class="block_help">РЎРїСЂР°РІРєР°</div>' +
+        '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
+        '<input type="button" class="btn btn_play" value="Запустить" />' +
+        '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
+        '<div class="block_help">Справка</div>' +
         '<div class="block_loading"><div class="waiting_loading"><img width="100%" height="100%" src="img/Lab_dynamic_viscosity_hourglass.png"/></div></div>' +
         '</div>';
 
@@ -55,11 +55,11 @@ function init_lab() {
         if (!help_active) {
             help_active = true;
             $(".block_help").css("display", "block");
-            $(".btn_help").attr("value", "Р’РµСЂРЅСѓС‚СЊСЃСЏ");
+            $(".btn_help").attr("value", "Вернуться");
         } else {
             help_active = false;
             $(".block_help").css("display", "none");
-            $(".btn_help").attr("value", "РЎРїСЂР°РІРєР°");
+            $(".btn_help").attr("value", "Справка");
         }
     }
 

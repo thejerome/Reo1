@@ -271,9 +271,6 @@
     width: 70px;
     height: 70px;
     z-index: 11;
-    background-size: contain;
-    background-image: url(img/Lab_dynamic_viscosity_hourglass.png);
-    background-repeat: no-repeat;
     -webkit-animation-name: rotation;
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
