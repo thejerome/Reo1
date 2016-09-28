@@ -1,6 +1,5 @@
 function init_lab() {
     var container,
-        previous_solution,
         help_active = false,
         MIN_TUBE_RADIUS = 0.02,
         MAX_TUBE_RADIUS = 0.2,
@@ -20,8 +19,7 @@ function init_lab() {
         default_calculate_data = {Q: 1.386},
         radius_coefficient,
         pressure_coefficient,
-        lab_var,
-        calculate_data,
+        laboratory_variant,
         timeout_jelly_running,
         window =
         '<div class="vlab_setting">' +
@@ -307,22 +305,7 @@ function init_lab() {
         ANT.calculate();
     }
 
-    function parse_variant(str, default_object) {
-        var parse_str;
-        if (typeof str === 'string' && str !== "") {
-            try {
-                parse_str = str.replace(/&quot;/g, "\"");
-                parse_str = JSON.parse(parse_str);
-            } catch (e) {
-                parse_str = default_object;
-            }
-        } else {
-            parse_str = default_object;
-        }
-        return parse_str;
-    }
-
-    function parse_calculate_results(str, default_object) {
+    function parse_result(str, default_object) {
         var parse_str;
         if (typeof str === 'string' && str !== "") {
             try {
@@ -330,10 +313,18 @@ function init_lab() {
                     .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&minus;/g, "-").replace(/&apos;/g, "\'").replace(/&#0045;/g, "-");
                 parse_str = JSON.parse(parse_str);
             } catch (e) {
-                parse_str = default_object;
+                if (default_object){
+                    parse_str = default_object;
+                } else {
+                    parse_str = false;
+                }
             }
         } else {
-            parse_str = default_object;
+            if (default_object){
+                parse_str = default_object;
+            } else {
+                parse_str = false;
+            }
         }
         return parse_str;
     }
@@ -341,15 +332,25 @@ function init_lab() {
     function get_variant() {
         var variant;
         if ($("#preGeneratedCode") !== null) {
-            variant = parse_variant($("#preGeneratedCode").val(), default_variant);
+            variant = parse_result($("#preGeneratedCode").val(), default_variant);
         } else {
             variant = default_variant;
         }
         return variant;
     }
 
-    function draw_previous_solution() {
-
+    function draw_previous_solution(previous_solution) {
+        $(".control_tube_radius_slider").val(previous_solution.tube_radius);
+        change_tube_radius_value();
+        radius_coefficient = create_radius_coefficient($(".control_tube_radius_slider").val());
+        $(".control_pressure_drop_slider").val(previous_solution.delta_p);
+        change_pressure_drop_value();
+        pressure_coefficient = create_pressure_coefficient($(".control_pressure_drop_slider").val());
+        draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
+        $(".viscosity_coefficient_value").val(previous_solution.mu);
+        viscosity_coefficient = previous_solution.mu;
+        init_plot(laboratory_variant.tau_gamma_values, ".block_viscosity_plot svg",
+            $(".block_viscosity_plot svg").attr("width"), $(".block_viscosity_plot svg").attr("height"), viscosity_coefficient);
     }
 
     function create_radius_coefficient(current_radius){
@@ -366,10 +367,14 @@ function init_lab() {
 
     return {
         init: function () {
-            lab_var = get_variant();
+            laboratory_variant = get_variant();
             container = $("#jsLab")[0];
             container.innerHTML = window;
-            fill_installation(lab_var);
+            fill_installation(laboratory_variant);
+            if ($("#previousSolution") !== null && $("#previousSolution").length > 0 && parse_result($("#previousSolution").val())) {
+                var previous_solution = parse_result($("#previousSolution").val());
+                draw_previous_solution(previous_solution);
+            }
             $(".btn_help").click(function () {
                 show_help();
             });
@@ -411,12 +416,12 @@ function init_lab() {
                     $(this).val(0)
                 }
                 viscosity_coefficient = $(this).val();
-                init_plot(lab_var.tau_gamma_values, ".block_viscosity_plot svg",
+                init_plot(laboratory_variant.tau_gamma_values, ".block_viscosity_plot svg",
                     $(".block_viscosity_plot svg").attr("width"), $(".block_viscosity_plot svg").attr("height"), $(this).val());
-            })
+            });
         },
         calculateHandler: function () {
-            calculate_data = parse_calculate_results(arguments[0], default_calculate_data);
+            var calculate_data = parse_result(arguments[0], default_calculate_data);
             unfreeze_installation(calculate_data);
         },
         getResults: function () {
