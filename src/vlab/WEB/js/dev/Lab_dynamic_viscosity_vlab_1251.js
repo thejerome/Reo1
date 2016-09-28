@@ -301,8 +301,7 @@ function init_lab() {
     
     function launch() {
         freeze_installation();
-        // ANT.calculate();
-        setTimeout(Vlab.calculateHandler, 5000);
+        ANT.calculate();
     }
 
     function parse_variant(str, def_obj) {
