@@ -33,7 +33,7 @@ function init_lab() {
         '<div class="control_density">Плотность &#961;:<span class="density_value value"></span><sup>кг</sup>/<sub>м<sup>3</sup></sub></div>' +
         '<div class="control_needed_volume">Требуемый объёмный расход <i>Q</i>: <span class="needed_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div>' +
         '<label class="control_viscosity_coefficient">Коэффициент динамической вязкости жидкости &#956;: ' +
-        '<input type="number" min="0" step="0.01" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
+        '<input type="number" min="0" step="0.001" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
         '</div>' +
         '<div class="block_viscosity_table"><table><tbody><tr><td>Напряжение сдвига &#964;<sub>i</sub>, Па</td></tr><tr><td>Скорость сдвига &#947;<sub>i</sub>, с<sup>-1</sup></td></tr></tbody></table></div>' +
         '<div class="block_tube_installation"><div class="tube_installation_control">' +
