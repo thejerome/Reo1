@@ -56,7 +56,7 @@ public class CalculateLogicTests {
 
         //convert json string to object
 
-
+/*
             System.out.println(objectMapper.writeValueAsString(
                             objectMapper.readValue(
                                     "{\n" +
@@ -85,7 +85,7 @@ public class CalculateLogicTests {
                                             " [10.5, 3.2, 1, 2]\n" +
                                             " ]}", PlotData.class)
                     )
-            );
+            );*/
 
     }
 
@@ -95,7 +95,7 @@ public class CalculateLogicTests {
         ObjectMapper objectMapper = new ObjectMapper();
 
         //convert json string to object
-
+/*
 
             System.out.println(objectMapper.writeValueAsString(
                             objectMapper.readValue(
@@ -103,7 +103,7 @@ public class CalculateLogicTests {
                                     ToolState.class)
                             )
             );
-
+*/
 
 
     }
@@ -112,7 +112,7 @@ public class CalculateLogicTests {
     public void testRealWorldCalculateProcesses() throws  Exception{
         GenerateProcessor generateProcessor = new GenerateProcessorImpl();
         GeneratingResult generatingResult = generateProcessor.generate("no matter");
-
+/*
         //create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
         ToolState toolState = objectMapper.readValue(
@@ -124,7 +124,7 @@ public class CalculateLogicTests {
 
         CalculatingResult calculatingResult = calculateProcessor.calculate("", escapeParam(objectMapper.writeValueAsString(toolState)), generatingResult);
 
-        System.out.println(calculatingResult.getCode());
+        System.out.println(calculatingResult.getCode());*/
     }
 
 
@@ -132,7 +132,7 @@ public class CalculateLogicTests {
     public void testCalculateProcesses() throws  Exception{
         GenerateProcessor generateProcessor = new GenerateProcessorImpl();
         GeneratingResult generatingResult = generateProcessor.generate("no matter");
-
+/*
         //create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
         ToolState toolState = new ToolState(
@@ -146,7 +146,7 @@ public class CalculateLogicTests {
 
         CalculatingResult calculatingResult = calculateProcessor.calculate("", escapeParam(objectMapper.writeValueAsString(toolState)), generatingResult);
 
-        System.out.println(calculatingResult.getCode());
+        System.out.println(calculatingResult.getCode());*/
     }
 
 

@@ -7,6 +7,11 @@ import rlcp.server.processor.calculate.CalculateProcessor;
 import vlab.server_java.model.*;
 import vlab.server_java.model.tool.ToolModel;
 
+import java.math.BigDecimal;
+
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
+import static vlab.server_java.model.util.Util.bd;
 import static vlab.server_java.model.util.Util.escapeParam;
 import static vlab.server_java.model.util.Util.prepareInputJsonString;
 
@@ -17,26 +22,27 @@ public class CalculateProcessorImpl implements CalculateProcessor {
     @Override
     public CalculatingResult calculate(String condition, String instructions, GeneratingResult generatingResult) {
         //do calculate logic here
-        String text = "text";
-        String code = "code";
+        String text = "";
+        String code = "";
 
-        instructions = prepareInputJsonString(instructions);
+        try{
+            ObjectMapper mapper = new ObjectMapper();
 
-        generatingResult = new GeneratingResult(
-                generatingResult.getText(),
-                prepareInputJsonString(generatingResult.getCode()),
-                prepareInputJsonString(generatingResult.getInstructions())
-        );
+            Solution solution = mapper.readValue(prepareInputJsonString(condition), Solution.class);
+            Variant variant = mapper.readValue(prepareInputJsonString(generatingResult.getCode()), Variant.class);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+            BigDecimal q = ToolModel.getQ(
+                    solution.getDelta_p(),
+                    solution.getTube_radius(),
+                    variant.getTube_length(),
+                    solution.getMu()
+            );
 
-        try {
-            ToolState toolState = objectMapper.readValue(instructions, ToolState.class);
-            Variant varCode = objectMapper.readValue(generatingResult.getCode(), Variant.class);
+            return new CalculatingResult("ok", escapeParam(mapper.writeValueAsString(new ExperimentResult(q))));
 
-            return new CalculatingResult("ok", escapeParam(objectMapper.writeValueAsString(ToolModel.buildPlot(toolState))));
-        } catch (Exception e) {
+        } catch (Exception e){
             return new CalculatingResult("error", e.toString());
         }
+
     }
 }
