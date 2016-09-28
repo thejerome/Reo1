@@ -21,6 +21,7 @@ function init_lab() {
         radius_coefficient,
         pressure_coefficient,
         lab_var,
+        calculate_data,
         timeout_jelly_running,
         window =
         '<div class="vlab_setting">' +
@@ -174,7 +175,7 @@ function init_lab() {
         ctx.fillStyle = '#f486a0';
         ctx.fillRect(0, 115, jelly_bound, 5 + 55/100*radius_coefficient);
         if (jelly_bound <= $(".tube_canvas").attr("width")){
-            timeout_jelly_running = setTimeout(function(){run_jelly(canvas_selector, radius_coefficient, parseInt(jelly_bound)+2)}, 2);
+            timeout_jelly_running = setTimeout(function(){run_jelly(canvas_selector, radius_coefficient, parseInt(jelly_bound)+1)}, 1);
         }
     }
 
@@ -293,8 +294,10 @@ function init_lab() {
         run_jelly($(".tube_canvas"), radius_coefficient, 10);
     }
 
-    function unfreeze_installation(){
+    function unfreeze_installation(calculate_data){
         clearTimeout(timeout_jelly_running);
+        $(".result_volume").css("visibility", "visible");
+        $(".result_volume_value").html(calculate_data.Q);
         draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
         $(".block_loading").removeClass("active_waiting");
     }
@@ -304,34 +307,33 @@ function init_lab() {
         ANT.calculate();
     }
 
-    function parse_variant(str, def_obj) {
+    function parse_variant(str, default_object) {
         var parse_str;
         if (typeof str === 'string' && str !== "") {
             try {
                 parse_str = str.replace(/&quot;/g, "\"");
                 parse_str = JSON.parse(parse_str);
             } catch (e) {
-                parse_str = def_obj;
+                parse_str = default_object;
             }
         } else {
-            parse_str = def_obj;
+            parse_str = default_object;
         }
         return parse_str;
     }
 
-    function parse_calculate_results(str, def_obj) {
+    function parse_calculate_results(str, default_object) {
         var parse_str;
         if (typeof str === 'string' && str !== "") {
             try {
                 parse_str = str.replace(/<br\/>/g, "\r\n").replace(/&amp;/g, "&").replace(/&quot;/g, "\"").replace(/&lt;br\/&gt;/g, "\r\n")
                     .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&minus;/g, "-").replace(/&apos;/g, "\'").replace(/&#0045;/g, "-");
                 parse_str = JSON.parse(parse_str);
-                parse_str = parse_str.table;
             } catch (e) {
-                parse_str = def_obj;
+                parse_str = default_object;
             }
         } else {
-            parse_str = def_obj;
+            parse_str = default_object;
         }
         return parse_str;
     }
@@ -414,10 +416,8 @@ function init_lab() {
             })
         },
         calculateHandler: function () {
-            lab_animation_data = parse_calculate_results(arguments[0], default_calculate_data);
-            $(".result_volume").css("visibility", "visible");
-            $(".result_volume_value").html(lab_animation_data.Q);
-            unfreeze_installation();
+            calculate_data = parse_calculate_results(arguments[0], default_calculate_data);
+            unfreeze_installation(calculate_data);
         },
         getResults: function () {
             var answer = {mu: viscosity_coefficient, delta_p: pressure_drop, tube_radius: tube_radius};
