@@ -12,10 +12,14 @@ import rlcp.server.processor.generate.GenerateProcessor;
 import vlab.server_java.generate.GenerateProcessorImpl;
 import vlab.server_java.model.Variant;
 
+import java.math.BigDecimal;
+
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
+import static vlab.server_java.model.util.Util.bd;
+import static vlab.server_java.model.util.Util.prepareInputJsonString;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-*-server-config.xml")
@@ -41,7 +45,7 @@ public class GenerateLogicTests {
         ObjectMapper objectMapper = new ObjectMapper();
 
         //convert json string to object
-
+/*
             System.out.println(objectMapper.writeValueAsString(
                             objectMapper.readValue(
                                     "{\"light_slits_distance\": 1,\n" +
@@ -75,18 +79,65 @@ public class GenerateLogicTests {
                     )
             );
 
-
+*/
 
     }
+
+//    @Test
+//    public void testGenerateProcessorProcesses() throws Exception{
+//
+//        GenerateProcessor generateProcessor = new GenerateProcessorImpl();
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        int negCounter = 0;
+//
+//        for (int i = 0; i < 10000; i++) {
+//            System.out.println(i);
+//            GeneratingResult generatingResult = generateProcessor.generate("no matter");
+//            Variant variant = mapper.readValue(prepareInputJsonString(generatingResult.getCode()), Variant.class);
+//
+//            for (BigDecimal[] bigDecimals : variant.getTau_gamma_values()) {
+//                if (bigDecimals[0].compareTo(BigDecimal.ZERO) < 0){
+//                    negCounter++;
+//                }
+//            }
+//        }
+//
+//        assertEquals(0, negCounter);
+//
+//
+//    }
 
     @Test
     public void testGenerateProcessorProcesses() throws Exception{
 
         GenerateProcessor generateProcessor = new GenerateProcessorImpl();
+        ObjectMapper mapper = new ObjectMapper();
 
-        GeneratingResult generatingResult = generateProcessor.generate("no matter");
+        int counter = 0;
+        BigDecimal min = BigDecimal.ONE;
 
-        System.out.println(generatingResult.getCode());
+        for (int i = 0; i < 10000; i++) {
+            System.out.println(i);
+            GeneratingResult generatingResult = generateProcessor.generate("no matter");
+            Variant variant = mapper.readValue(prepareInputJsonString(generatingResult.getCode()), Variant.class);
+
+            System.out.println(variant.getNeeded_Q());
+
+            if (variant.getNeeded_Q().compareTo(bd(0.001)) < 1){
+                counter++;
+            }
+
+            if(variant.getNeeded_Q().compareTo(min) < 0){
+                min = variant.getNeeded_Q();
+            }
+
+        }
+
+        System.out.println();
+        System.out.println(min);
+
+        assertEquals(0, counter);
 
 
     }

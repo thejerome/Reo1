@@ -4,18 +4,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import rlcp.generate.GeneratingResult;
 import rlcp.server.processor.generate.GenerateProcessor;
-import vlab.server_java.model.PlotData;
-import vlab.server_java.model.ToolState;
 import vlab.server_java.model.Variant;
-import vlab.server_java.model.tool.ToolModel;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
+import static java.lang.Math.PI;
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_DOWN;
+import static java.math.RoundingMode.HALF_UP;
+import static vlab.server_java.model.tool.ToolModel.*;
 import static vlab.server_java.model.util.Util.bd;
 import static vlab.server_java.model.util.Util.escapeParam;
+import static vlab.server_java.model.util.Util.shrink;
 
 /**
  * Simple GenerateProcessor implementation. Supposed to be changed as needed to
@@ -24,8 +31,10 @@ import static vlab.server_java.model.util.Util.escapeParam;
 public class GenerateProcessorImpl implements GenerateProcessor {
 
 
-
     Random random = new Random(System.nanoTime());
+    private static int tauGammaPairsAmount = 8;
+    private static int gammaMinStep = 15;
+    private static int gammaMaxStep = 35;
 
     @Override
     public GeneratingResult generate(String condition) {
@@ -45,58 +54,100 @@ public class GenerateProcessorImpl implements GenerateProcessor {
             double v = getRandomDoubleBetween(mass * 2 + 1, mass * 5);
 */
 
+            //Из пдф-файла. Для радиуса 0.02:0.2 и с шагом 0.01 в метрах, для разницы давления 200:500 с шагом 1 в кПа.
 
-            BigDecimal light_slits_distance = bd("0.5");
-            BigDecimal light_screen_distance = bd("0.7");
-            BigDecimal[] light_screen_range = new BigDecimal[]{bd("0.01"), bd("2")};
-            BigDecimal light_screen_step = bd("0.01");
-            BigDecimal light_width = bd("0.05");
-            BigDecimal[] light_width_range = new BigDecimal[]{bd("0.01"), bd("1")};
-            BigDecimal light_width_step = bd("0.01");
-            BigDecimal light_length = bd("721");
-            BigDecimal[] light_length_range = new BigDecimal[]{bd("380"), bd("780")};
-            BigDecimal light_length_step = bd("1");
-            boolean right_slit_closed = false;
-            boolean left_slit_closed = false;
-            BigDecimal between_slits_width = bd("0.01");
-            BigDecimal[] between_slits_range = new BigDecimal[]{bd("0.01"), bd("10")};
-            BigDecimal between_slits_step = bd("0.01");
-            PlotData plotData = ToolModel.buildPlot(
-                    new ToolState(
-                            light_slits_distance,
-                            light_screen_distance,
-                            light_width,
-                            light_length,
-                            between_slits_width,
-                            left_slit_closed,
-                            right_slit_closed
-                    )
-            );
-            List<BigDecimal[]> data_plot_pattern = plotData.getData_plot();
-            BigDecimal visibility = plotData.getVisibility();
+//            0.37 Па.с
 
-            code = mapper.writeValueAsString(
-                    new Variant(light_slits_distance,
-                            light_screen_distance,
-                            light_screen_range,
-                            light_screen_step,
-                            light_width,
-                            light_width_range,
-                            light_width_step,
-                            light_length,
-                            light_length_range,
-                            light_length_step,
-                            right_slit_closed,
-                            left_slit_closed,
-                            between_slits_width,
-                            between_slits_range,
-                            between_slits_step,
-                            visibility,
-                            data_plot_pattern
-                    )
-            );
+            BigDecimal mu = bd(getRandomDoubleBetween(0.01, 1.5));
+            BigDecimal tubeLength = bd(getRandomIntegerBetween(10, 100));
+            BigDecimal ro = bd(getRandomIntegerBetween(1000, 1500));
 
-            instructions = " ";
+            BigDecimal randomTubeRadius = bd(getRandomDoubleBetween(0.1, 0.2));
+            BigDecimal randomDelta_p = bd(getRandomDoubleBetween(200, 500));
+
+            BigDecimal needed_Q = getQ(randomDelta_p, randomTubeRadius, tubeLength, mu);
+
+            BigDecimal v_cr = needed_Q.divide(bd(PI).multiply(bd(0.2)), HALF_UP);
+            BigDecimal recr = v_cr.multiply(bd(2)).multiply(bd(0.2)).multiply(ro).divide(mu, HALF_UP);
+
+
+
+
+
+            List<BigDecimal[]> tauGammaPairs = new ArrayList<>(tauGammaPairsAmount);
+            int previousGamma = 0;
+            int gamma = 0;
+            for (int i = 0; i < tauGammaPairsAmount; i++) {
+                BigDecimal bdGamma = bd(gamma);
+                BigDecimal bdTau = bdGamma.multiply(mu);
+
+                BigDecimal[] tauGammaPair = {bdTau, bdGamma};
+                tauGammaPairs.add(tauGammaPair);
+
+                previousGamma = gamma;
+                gamma = getRandomIntegerBetween(gammaMinStep, gammaMaxStep) + previousGamma;
+            }
+
+            {
+                //making deviation
+
+                BigDecimal biggestTau = tauGammaPairs.get(tauGammaPairsAmount - 1)[0];
+                BigDecimal smallestTau = tauGammaPairs.get(1)[0];
+
+                List<BigDecimal> tauEPlus = new ArrayList<>(tauGammaPairsAmount);
+                List<BigDecimal> tauEMinus = new ArrayList<>(tauGammaPairsAmount);
+                tauEPlus.add(ZERO);
+                tauEMinus.add(ZERO);
+
+                for (int i = 1; i < tauGammaPairsAmount; i++) {
+                    tauEPlus.add(bd(getRandomDoubleBetween(0, 1000)));
+                    tauEMinus.add(bd(getRandomDoubleBetween(0, 1000)));
+                }
+
+                Collections.sort(tauEMinus);
+                Collections.sort(tauEPlus);
+                BigDecimal tauEPlusSum = tauEPlus.stream().reduce((a, b) -> a.add(b)).get();
+                BigDecimal tauEMinusSum = tauEMinus.stream().reduce((a, b) -> a.add(b)).get();
+
+
+
+                for (int i = 1; i < tauGammaPairsAmount; i++) {
+                    tauEPlus.set(i, tauEPlus.get(i).divide(tauEPlusSum, HALF_UP));
+                    tauEMinus.set(i, tauEMinus.get(i).divide(tauEMinusSum, HALF_UP));
+                }
+
+//                BigDecimal totalDeviation = biggestTau.min(
+//                        smallestTau.multiply(bd(0.9)).divide(tauEPlus.get(1).subtract(tauEMinus.get(1)), HALF_UP)
+//                );
+
+                BigDecimal totalDeviation = biggestTau;
+
+                for (int i = 1; i < tauGammaPairsAmount; i++) {
+                    tauEPlus.set(i, tauEPlus.get(i).multiply(totalDeviation));
+                    tauEMinus.set(i, tauEMinus.get(i).multiply(totalDeviation));
+                }
+
+                for (int i = 1; i < tauGammaPairsAmount; i++) {
+                    BigDecimal newTau = tauGammaPairs.get(i)[0].add(tauEPlus.get(i)).subtract(tauEMinus.get(i));
+                    if (newTau.compareTo(ZERO) == 1){
+                        tauGammaPairs.get(i)[0] = newTau;
+                    } else {
+                        tauGammaPairs.get(i)[0] = tauGammaPairs.get(i)[0].multiply(bd(0.1));
+                    }
+                }
+
+                BigDecimal tauSum = tauGammaPairs.stream().map(tg -> tg[0]).reduce((a,b) -> a.add(b)).get();
+                BigDecimal gammaSum = tauGammaPairs.stream().map(tg -> tg[1]).reduce((a, b) -> a.add(b)).get();
+
+                mu = shrink(tauSum.divide(gammaSum, HALF_UP));
+            }
+
+
+            Variant variant = new Variant(tauGammaPairs, tubeLength, needed_Q, ro);
+
+
+            code = mapper.writeValueAsString(variant);
+            instructions = mu.toString();
         } catch (JsonProcessingException e) {
             code = "Failed, " + e.getOriginalMessage();
         }
@@ -109,7 +160,7 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         return (a + random.nextInt(b - a + 1));
     }
 
-    private double getRandomDoubleBetween(int a, int b) {
+    private double getRandomDoubleBetween(double a, double b) {
         return (a + random.nextDouble() * (b-a));
     }
 
