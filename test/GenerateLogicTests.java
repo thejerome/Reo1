@@ -18,6 +18,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.*;
+import static vlab.server_java.model.util.Util.bd;
 import static vlab.server_java.model.util.Util.prepareInputJsonString;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -82,27 +83,61 @@ public class GenerateLogicTests {
 
     }
 
+//    @Test
+//    public void testGenerateProcessorProcesses() throws Exception{
+//
+//        GenerateProcessor generateProcessor = new GenerateProcessorImpl();
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        int negCounter = 0;
+//
+//        for (int i = 0; i < 10000; i++) {
+//            System.out.println(i);
+//            GeneratingResult generatingResult = generateProcessor.generate("no matter");
+//            Variant variant = mapper.readValue(prepareInputJsonString(generatingResult.getCode()), Variant.class);
+//
+//            for (BigDecimal[] bigDecimals : variant.getTau_gamma_values()) {
+//                if (bigDecimals[0].compareTo(BigDecimal.ZERO) < 0){
+//                    negCounter++;
+//                }
+//            }
+//        }
+//
+//        assertEquals(0, negCounter);
+//
+//
+//    }
+
     @Test
     public void testGenerateProcessorProcesses() throws Exception{
 
         GenerateProcessor generateProcessor = new GenerateProcessorImpl();
         ObjectMapper mapper = new ObjectMapper();
 
-        int negCounter = 0;
+        int counter = 0;
+        BigDecimal min = BigDecimal.ONE;
 
         for (int i = 0; i < 10000; i++) {
             System.out.println(i);
             GeneratingResult generatingResult = generateProcessor.generate("no matter");
             Variant variant = mapper.readValue(prepareInputJsonString(generatingResult.getCode()), Variant.class);
 
-            for (BigDecimal[] bigDecimals : variant.getTau_gamma_values()) {
-                if (bigDecimals[0].compareTo(BigDecimal.ZERO) < 0){
-                    negCounter++;
-                }
+            System.out.println(variant.getNeeded_Q());
+
+            if (variant.getNeeded_Q().compareTo(bd(0.001)) < 1){
+                counter++;
             }
+
+            if(variant.getNeeded_Q().compareTo(min) < 0){
+                min = variant.getNeeded_Q();
+            }
+
         }
 
-        assertEquals(0, negCounter);
+        System.out.println();
+        System.out.println(min);
+
+        assertEquals(0, counter);
 
 
     }

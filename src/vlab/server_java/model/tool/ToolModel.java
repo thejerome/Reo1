@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 import static java.lang.Math.*;
 import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.*;
 import static vlab.server_java.model.util.Util.bd;
@@ -14,13 +15,6 @@ import static vlab.server_java.model.util.Util.bd;
  */
 public class ToolModel {
 
-    public static final BigDecimal TEN_POW_MINUS_NINE = new BigDecimal("0.000000001");
-    public static final BigDecimal TEN_POW_MINUS_THREE = new BigDecimal("0.001");
-    public static final BigDecimal bdPI = new BigDecimal(PI);
-    private static BigDecimal halfWidth = bd("0.03");
-    private static BigDecimal xStep = bd("0.00025");
-    private static final BigDecimal i0 = ONE;
-
     public static BigDecimal getQ(
             BigDecimal delta_p,
             BigDecimal tube_radius,
@@ -28,8 +22,14 @@ public class ToolModel {
             BigDecimal mu
     ){
 
-        return delta_p.multiply(bd(1000)).multiply(bd(Math.PI)).multiply(tube_radius.pow(4))
-                .divide(bd(8).multiply(tube_length).multiply(mu), HALF_UP);
+        BigDecimal dividend = delta_p.multiply(bd(1000)).multiply(bd(Math.PI)).multiply(tube_radius.pow(4));
+        BigDecimal divisor = bd(8).multiply(tube_length).multiply(mu);
+
+        if(divisor.compareTo(ZERO) == 0){
+            return ZERO;
+        }
+
+        return dividend.divide(divisor, HALF_UP);
 
     }
 }

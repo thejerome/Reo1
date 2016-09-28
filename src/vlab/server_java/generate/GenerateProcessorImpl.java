@@ -59,10 +59,10 @@ public class GenerateProcessorImpl implements GenerateProcessor {
 //            0.37 Па.с
 
             BigDecimal mu = bd(getRandomDoubleBetween(0.01, 1.5));
-            BigDecimal tubeLength = bd(getRandomIntegerBetween(10, 500));
+            BigDecimal tubeLength = bd(getRandomIntegerBetween(10, 100));
             BigDecimal ro = bd(getRandomIntegerBetween(1000, 1500));
 
-            BigDecimal randomTubeRadius = bd(getRandomDoubleBetween(0.02, 0.2));
+            BigDecimal randomTubeRadius = bd(getRandomDoubleBetween(0.1, 0.2));
             BigDecimal randomDelta_p = bd(getRandomDoubleBetween(200, 500));
 
             BigDecimal needed_Q = getQ(randomDelta_p, randomTubeRadius, tubeLength, mu);
