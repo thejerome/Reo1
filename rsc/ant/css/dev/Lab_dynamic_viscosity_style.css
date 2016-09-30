@@ -1,0 +1,353 @@
+.vlab_setting {
+    width: 800px;
+    height: 730px;
+    border: 2px solid #3d4652;
+    margin: 10px;
+    border-radius: 5px;
+    position: relative;
+    padding: 0;
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: space-between;
+    align-items: flex-start;
+    overflow: auto;
+    position: relative;
+}
+
+.block_title {
+    width: 100%;
+    background-color: #eeeeee;
+    padding: 0 15px;
+    font-size: 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.block_title input {
+    float: right;
+}
+
+.block_title .vlab_name {
+    display: inline-block;
+}
+
+.block_viscosity_plot {
+    width: 60%;
+    border-top: 1px solid #4f5e6d;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    height: 250px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: space-around;
+}
+
+.block_control {
+    width: 40%;
+    border-bottom: 1px solid #3d4652;
+    border-left: 1px solid #3d4652;
+    background-color: #eeeeee;
+    padding: 15px;
+    height: 250px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-content: space-around;
+}
+
+.block_control > div {
+    width: 100%;
+}
+
+.block_control .value, .block_tube_installation .value, .tube_installation_control .value {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.viscosity_coefficient_value {
+    width: 25%;
+}
+
+.block_viscosity_table {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: space-around;
+}
+
+.block_viscosity_table table {
+    background: #ffffff;
+    border-spacing: 0;
+    width: 96%;
+    border-collapse: collapse;
+    border: 1px solid #3d4652;
+    text-align: center;
+    table-layout: fixed;
+}
+
+.block_viscosity_table table td {
+    padding: 5px;
+    border: 1px solid #3d4652;
+}
+
+.block_viscosity_table table tr {
+    height: 40px;
+}
+
+.block_viscosity_table tr td:first-child {
+    width: 180px;
+    text-align: left;
+    background: #eeeeee;
+}
+
+.block_tube_installation {
+    width: 100%;
+    padding: 0 15px;
+    height: 270px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    position: relative;
+}
+
+.tube_installation_control {
+    position: absolute;
+    top: 0;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    height: 90px;
+}
+
+.tube_installation_control > div {
+    width: 40%;
+}
+
+.tube_installation_control > div:nth-child(2) {
+    margin-left: 20px;
+}
+
+.tube_installation_control > div:first-child {
+    margin-left: 30px;
+}
+
+.tube_installation_control label {
+   margin-right: 40%;
+}
+
+.control_tube_radius_slider, .control_pressure_drop_slider {
+    width: 80px;
+    vertical-align: middle;
+}
+
+.control_tube_radius_value, .control_pressure_drop_value {
+    width: 60px;
+    vertical-align: middle;
+}
+
+.canvas_container {
+    background: #eeeeee;
+    border-radius: 20px;
+    border: 1px solid #3d4652;
+}
+
+.result_volume {
+    margin-left: 50%;
+    font-weight: bold;
+    font-size: 18px;
+    visibility: hidden;
+}
+
+.block_help {
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 3;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    height: 640px;
+    border-top: 1px solid #3d4652;
+    background-color: #ffffff;
+    padding: 15px;
+    font-size: 14px;
+}
+
+.btn {
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid #eea236;
+    outline: none;
+    border-radius: 13px;
+    min-width: 90px;
+    color: #fff;
+    height: 39px;
+    background-image: linear-gradient(to bottom, #FBC579, #fbb450);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.btn:hover {
+    background: #eea236;
+}
+
+.btn.btn_help, .btn.btn_play {
+    font-size: 14px;
+    margin: 0;
+}
+
+.block_viscosity_plot .axis path, .block_viscosity_plot .axis line {
+    fill: none;
+    stroke: #777777;
+    shape-rendering: crispEdges;
+}
+
+.block_viscosity_plot .axis text {
+    font-size: 13px;
+}
+
+.block_viscosity_plot .tick {
+    stroke-dasharray: 2, 2;
+}
+
+.btn.not_active {
+    background-image: linear-gradient(to bottom, #FCDDB0, #FCDDB0);
+    cursor: auto;
+    border-color: #FCD192;
+}
+
+.block_loading {
+    display: none;
+}
+
+.waiting_loading {
+    display: none;
+}
+
+.block_loading.active_waiting {
+    width: 100%;
+    height: 670px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: auto;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.block_loading.active_waiting .waiting_loading {
+    display: block;
+    padding: 0;
+    width: 70px;
+    height: 70px;
+    z-index: 11;
+    -webkit-animation-name: rotation;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: rotation;
+    -moz-animation-duration: 2s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -o-animation-name: rotation;
+    -o-animation-duration: 2s;
+    -o-animation-iteration-count: infinite;
+    -o-animation-timing-function: linear;
+    animation-name: rotation;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@-moz-keyframes rotation {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    65% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    100% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
+
+@-o-keyframes rotation {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    65% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    100% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes rotation {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    65% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+    100% {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(720deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
