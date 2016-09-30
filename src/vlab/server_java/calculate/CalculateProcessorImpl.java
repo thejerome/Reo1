@@ -8,6 +8,7 @@ import vlab.server_java.model.*;
 import vlab.server_java.model.tool.ToolModel;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
@@ -38,7 +39,9 @@ public class CalculateProcessorImpl implements CalculateProcessor {
                     solution.getMu()
             );
 
-            return new CalculatingResult("ok", escapeParam(mapper.writeValueAsString(new ExperimentResult(q))));
+            TimeUnit.SECONDS.sleep(4);
+
+            return new CalculatingResult("ok", escapeParam(escapeParam(mapper.writeValueAsString(new ExperimentResult(q)))));
 
         } catch (Exception e){
             return new CalculatingResult("error", e.toString());

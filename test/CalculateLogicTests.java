@@ -89,6 +89,24 @@ public class CalculateLogicTests {
 
     }
 
+
+    @Test
+    public void testJson2() throws  Exception{
+        //create ObjectMapper instance
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //convert json string to object
+
+
+            System.out.println(objectMapper.writeValueAsString(
+                            objectMapper.readValue(
+                                    objectMapper.writeValueAsString(new ExperimentResult(bd(234))),
+                                    ExperimentResult.class
+                            )
+                    )
+            );
+    }
+
     @Test
     public void testRealWorldJson() throws  Exception{
         //create ObjectMapper instance

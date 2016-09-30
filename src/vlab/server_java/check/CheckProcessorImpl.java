@@ -43,8 +43,8 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
             BigDecimal solutionQ = ToolModel.getQ(solution.getDelta_p(), solution.getTube_radius(), variant.getTube_length(), realMu);
             BigDecimal solutionMu = solution.getMu();
 
-            boolean isMuOk = realMu.subtract(solution.getMu()).compareTo(ZERO) == 0;
-            boolean isQOk = realMu.subtract(variant.getNeeded_Q()).compareTo(ZERO) == 0;
+            boolean isMuOk = realMu.subtract(solutionMu).compareTo(ZERO) == 0;
+            boolean isQOk = realQ.subtract(solutionQ).compareTo(ZERO) == 0;
 
             if(isMuOk){
                 if (isQOk){
