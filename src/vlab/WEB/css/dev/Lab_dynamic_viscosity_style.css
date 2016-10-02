@@ -172,7 +172,8 @@
 }
 
 .result_volume {
-    margin-left: 50%;
+    margin-left: 40%;
+    width: 60%;
     font-weight: bold;
     font-size: 18px;
     visibility: hidden;

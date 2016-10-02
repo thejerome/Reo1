@@ -247,12 +247,12 @@ function init_lab() {
             .style("fill", "#248118");
         plot.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate(35, 22)")
+            .attr("transform", "translate(35, 17)")
             .style("font-size","24px")
             .html("&#964;");
         plot.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate("+ (width-10) +","+(height-10)+")")
+            .attr("transform", "translate("+ (width-8) +","+(height-10)+")")
             .style("font-size","22px")
             .html("&#947;");
         if (tangent) {
