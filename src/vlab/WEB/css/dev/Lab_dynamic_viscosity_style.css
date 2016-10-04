@@ -188,11 +188,35 @@
     position: absolute;
     top: 60px;
     left: 0;
-    height: 640px;
+    height: 670px;
     border-top: 1px solid #3d4652;
     background-color: #ffffff;
     padding: 15px;
     font-size: 14px;
+    overflow-y: auto;
+}
+
+.block_help > h1 {
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+.block_help > p {
+    text-indent: 40px;
+    text-align: left;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: justify;
+}
+
+.block_help > p.small_paragraph {
+    font-size: 16px;
+    text-indent: 0;
+}
+
+.block_help img{
+    vertical-align: middle;
 }
 
 .btn {
@@ -207,7 +231,7 @@
     border: 1px solid #eea236;
     outline: none;
     border-radius: 13px;
-    min-width: 90px;
+    min-width: 120px;
     color: #fff;
     height: 39px;
     background-image: linear-gradient(to bottom, #FBC579, #fbb450);

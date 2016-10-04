@@ -9,13 +9,13 @@ function init_lab() {
         pressure_drop = MIN_PRESSURE_DROP,
         viscosity_coefficient = 0,
         default_variant = {
-        tau_gamma_values: [
-            [0, 0], [34, 7], [65, 25], [78, 39], [88, 45], [98, 56], [120, 61], [132, 74], [152, 88], [170, 95]
-        ],
-        tube_length: 20,
-        needed_Q: 1.2,
-        ro: 1.386
-    },
+            tau_gamma_values: [
+                [0, 0], [34, 7], [65, 25], [78, 39], [88, 45], [98, 56], [120, 61], [132, 74], [152, 88], [170, 95]
+            ],
+            tube_length: 20,
+            needed_Q: 1.2,
+            ro: 1.386
+        },
         default_calculate_data = {Q: 1.386},
         radius_coefficient,
         pressure_coefficient,
@@ -24,7 +24,7 @@ function init_lab() {
         window =
         '<div class="vlab_setting">' +
         '<div class="block_title">' +
-        '<div class="vlab_name">Виртуальная лаборатория «Коэффициент динамической вязкости»</div>' +
+        '<div class="vlab_name">Коэффициент динамической вязкости</div>' +
         '<input class="btn_help btn" type="button" value="Справка"/></div>' +
         '<div class="block_viscosity_plot"><svg width="450" height="220"></svg></div>' +
         '<div class="block_control">' +
@@ -46,7 +46,23 @@ function init_lab() {
         '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
         '<input type="button" class="btn btn_play" value="Запустить" />' +
         '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
-        '<div class="block_help">Справка</div>' +
+        '<div class="block_help">' +
+        '<h1>Помощь по работе в виртуальной лаборатории</h1>' +
+        '<p>В таблице представлены экспериментальные данные, полученные в результате вискозиметрирования молочной сыворотки' +
+        ': значения напряжений <img src="img/Lab_dynamic_viscosity_math_1.png" /> и скоростей сдвига <img src="img/Lab_dynamic_viscosity_math_2.png" />.</p>' +
+        '<p>Во-первых, Вам необходимо определить коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_3.png" /> методом средних (соответственно Вы сможете построить график ' +
+        'зависимости <img src="img/Lab_dynamic_viscosity_math_4.png" /> - здесь построен автоматически).</p>' +
+        '<p>Как показала практика, метод средних при обработке данных в реометрии имеет достаточную точность. Вместо довольно громоздкого метода наименьших ' +
+        'квадратов при обработке данных в реометрии с успехом можно использовать гораздо более простой метод средних.</p>' +
+        '<p>Так, если по результатам опытов составлена система из <i>n</i> (число опытов) уравнений для ньютоновской жидкости: <img src="img/Lab_dynamic_viscosity_math_5.png" />.</p>' +
+        '<p>Тогда по методу средних коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_6.png" />.</p>' +
+        '<p class="small_paragraph">Примечание: в современном табличном процессоре Вы можете построить линию тренда по заданным точкам с указанием ' +
+        'формулы полученного тренда и коэффициента детерминации. Линейная регрессия в таком случае будет построена методом наименьших квадратов (на графике построена). ' +
+        'В этом случае  угловой коэффициент наклона построенной прямой и будет соответствовать искомому коэффициенту динамической вязкости.  </p>' +
+        '<p>Рассчитайте таким образом коэффициент динамической вязкости, подставьте его в соответствующее поле.</p>' +
+        '<p>Следующая задача практикума - стандартная реологическая задача: сконфигурировать трубу (найти её геометрические параметры и ' +
+        'характеристики течения в трубе при ламинарном течении), чтобы достичь требуемого расхода материала.</p>' +
+        '</div>' +
         '<div class="block_loading"><div class="waiting_loading"><img width="100%" height="100%" src="img/Lab_dynamic_viscosity_hourglass.png"/></div></div>' +
         '</div>';
 
@@ -247,7 +263,7 @@ function init_lab() {
             .style("fill", "#248118");
         plot.append("text")
             .attr("text-anchor", "middle")
-            .attr("transform", "translate(35, 17)")
+            .attr("transform", "translate(35, 16)")
             .style("font-size","24px")
             .html("&#964;");
         plot.append("text")
