@@ -9,6 +9,7 @@ import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.*;
 import static vlab.server_java.model.util.Util.bd;
+import static vlab.server_java.model.util.Util.shrink;
 
 /**
  * Created by efimchick on 04.07.16.
@@ -29,7 +30,7 @@ public class ToolModel {
             return ZERO;
         }
 
-        return dividend.divide(divisor, HALF_UP);
+        return shrink(dividend.divide(divisor, HALF_UP));
 
     }
 }
