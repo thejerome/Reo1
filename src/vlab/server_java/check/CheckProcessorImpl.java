@@ -42,7 +42,7 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
             BigDecimal solutionMu = solution.getMu();
 
             boolean isMuOk = realMu.subtract(solutionMu).compareTo(ZERO) == 0;
-            boolean isQOk = realQ.subtract(solutionQ).compareTo(ZERO) == 0;
+            boolean isQOk = realQ.subtract(solutionQ).abs().compareTo(realQ.multiply(bd(0.01))) <= 0;
 
             if(isMuOk){
                 if (isQOk){
