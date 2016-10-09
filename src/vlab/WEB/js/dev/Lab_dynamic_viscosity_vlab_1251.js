@@ -22,49 +22,49 @@ function init_lab() {
         laboratory_variant,
         timeout_jelly_running,
         window =
-        '<div class="vlab_setting">' +
-        '<div class="block_title">' +
-        '<div class="vlab_name">Коэффициент динамической вязкости</div>' +
-        '<input class="btn_help btn" type="button" value="Справка"/></div>' +
-        '<div class="block_viscosity_plot"><svg width="450" height="220"></svg></div>' +
-        '<div class="block_control">' +
-        '<div class="control_tube_length">Длина трубы <i>l</i>:<span class="tube_length_value value"></span>м</div>' +
-        '<div class="control_density">Плотность &#961;:<span class="density_value value"></span><sup>кг</sup>/<sub>м<sup>3</sup></sub></div>' +
-        '<div class="control_needed_volume">Требуемый объёмный расход <i>Q</i>: <span class="needed_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div>' +
-        '<label class="control_viscosity_coefficient">Коэффициент динамической вязкости жидкости &#956;: ' +
-        '<input type="number" min="0" step="0.001" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
-        '</div>' +
-        '<div class="block_viscosity_table"><table><tbody><tr><td>Напряжение сдвига &#964;<sub>i</sub>, Па</td></tr><tr><td>Скорость сдвига &#947;<sub>i</sub>, с<sup>-1</sup></td></tr></tbody></table></div>' +
-        '<div class="block_tube_installation"><div class="tube_installation_control">' +
-        '<div><label for="control_tube_radius_slider">Радиус трубы <i>r</i>:</label><input class="control_tube_radius_slider" id="control_tube_radius_slider" type="range" ' +
-        'step="0.01" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '"/>' +
-        '<input class="control_tube_radius_value value" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '" type="number" step="0.01"/>м' +
-        '</div><div><label for="control_pressure_drop_slider">Перепад давлений <i>p</i>:</label><input class="control_pressure_drop_slider" id="control_pressure_drop_slider" type="range" ' +
-        'step="1" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '"/>' +
-        '<input class="control_pressure_drop_value value" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '" type="number" step="1"/>кПа' +
-        '</div></div>' +
-        '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
-        '<input type="button" class="btn btn_play" value="Запустить" />' +
-        '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
-        '<div class="block_help">' +
-        '<h1>Помощь по работе в виртуальной лаборатории</h1>' +
-        '<p>В таблице представлены экспериментальные данные, полученные в результате вискозиметрирования молочной сыворотки' +
-        ': значения напряжений <img src="img/Lab_dynamic_viscosity_math_1.png" /> и скоростей сдвига <img src="img/Lab_dynamic_viscosity_math_2.png" />.</p>' +
-        '<p>Во-первых, Вам необходимо определить коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_3.png" /> методом средних (соответственно Вы сможете построить график ' +
-        'зависимости <img src="img/Lab_dynamic_viscosity_math_4.png" /> - здесь построен автоматически).</p>' +
-        '<p>Как показала практика, метод средних при обработке данных в реометрии имеет достаточную точность. Вместо довольно громоздкого метода наименьших ' +
-        'квадратов при обработке данных в реометрии с успехом можно использовать гораздо более простой метод средних.</p>' +
-        '<p>Так, если по результатам опытов составлена система из <i>n</i> (число опытов) уравнений для ньютоновской жидкости: <img src="img/Lab_dynamic_viscosity_math_5.png" />.</p>' +
-        '<p>Тогда по методу средних коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_6.png" />.</p>' +
-        '<p class="small_paragraph">Примечание: в современном табличном процессоре Вы можете построить линию тренда по заданным точкам с указанием ' +
-        'формулы полученного тренда и коэффициента детерминации. Линейная регрессия в таком случае будет построена методом наименьших квадратов (на графике построена). ' +
-        'В этом случае  угловой коэффициент наклона построенной прямой и будет соответствовать искомому коэффициенту динамической вязкости.  </p>' +
-        '<p>Рассчитайте таким образом коэффициент динамической вязкости, подставьте его в соответствующее поле.</p>' +
-        '<p>Следующая задача практикума - стандартная реологическая задача: сконфигурировать трубу (найти её геометрические параметры и ' +
-        'характеристики течения в трубе при ламинарном течении), чтобы достичь требуемого расхода материала.</p>' +
-        '</div>' +
-        '<div class="block_loading"><div class="waiting_loading"><img width="100%" height="100%" src="img/Lab_dynamic_viscosity_hourglass.png"/></div></div>' +
-        '</div>';
+            '<div class="vlab_setting">' +
+            '<div class="block_title">' +
+            '<div class="vlab_name">Коэффициент динамической вязкости</div>' +
+            '<input class="btn_help btn" type="button" value="Справка"/></div>' +
+            '<div class="block_viscosity_plot"><svg width="450" height="220"></svg></div>' +
+            '<div class="block_control">' +
+            '<div class="control_tube_length">Длина трубы <i>l</i>:<span class="tube_length_value value"></span>м</div>' +
+            '<div class="control_density">Плотность &#961;:<span class="density_value value"></span><sup>кг</sup>/<sub>м<sup>3</sup></sub></div>' +
+            '<div class="control_needed_volume">Требуемый объёмный расход <i>Q</i>:<br /> <span class="needed_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div>' +
+            '<label class="control_viscosity_coefficient">Коэффициент динамической вязкости жидкости &#956;: ' +
+            '<input type="number" min="0" step="0.001" value="' + viscosity_coefficient + '" class="viscosity_coefficient_value value" />Па&#183;с</label>' +
+            '</div>' +
+            '<div class="block_viscosity_table"><table><tbody><tr><td>Напряжение сдвига &#964;<sub>i</sub>, Па</td></tr><tr><td>Скорость сдвига &#947;<sub>i</sub>, с<sup>-1</sup></td></tr></tbody></table></div>' +
+            '<div class="block_tube_installation"><div class="tube_installation_control">' +
+            '<div><label for="control_tube_radius_slider">Радиус трубы <i>r</i>:</label><input class="control_tube_radius_slider" id="control_tube_radius_slider" type="range" ' +
+            'step="0.01" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '"/>' +
+            '<input class="control_tube_radius_value value" value="' + MIN_TUBE_RADIUS + '" min="' + MIN_TUBE_RADIUS + '" max="' + MAX_TUBE_RADIUS + '" type="number" step="0.01"/>м' +
+            '</div><div><label for="control_pressure_drop_slider">Перепад давлений <i>p</i>:</label><input class="control_pressure_drop_slider" id="control_pressure_drop_slider" type="range" ' +
+            'step="1" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '"/>' +
+            '<input class="control_pressure_drop_value value" value="' + MIN_PRESSURE_DROP + '" min="' + MIN_PRESSURE_DROP + '" max="' + MAX_PRESSURE_DROP + '" type="number" step="1"/>кПа' +
+            '</div></div>' +
+            '<div class="canvas_container"><canvas width="660" height="200px" class="tube_canvas">Браузер не поддерживает canvas</canvas></div>' +
+            '<input type="button" class="btn btn_play" value="Запустить" />' +
+            '<div class="result_volume">Полученный объёмный расход <i>Q</i>: <span class="result_volume_value value"></span><sup>м<sup>3</sup></sup>/<sub>с</sub></div></div>' +
+            '<div class="block_help">' +
+            '<h1>Помощь по работе в виртуальной лаборатории</h1>' +
+            '<p>В таблице представлены экспериментальные данные, полученные в результате вискозиметрирования молочной сыворотки' +
+            ': значения напряжений <img src="img/Lab_dynamic_viscosity_math_1.png" /> и скоростей сдвига <img src="img/Lab_dynamic_viscosity_math_2.png" />.</p>' +
+            '<p>Во-первых, Вам необходимо определить коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_3.png" /> методом средних (соответственно Вы сможете построить график ' +
+            'зависимости <img src="img/Lab_dynamic_viscosity_math_4.png" /> - здесь построен автоматически).</p>' +
+            '<p>Как показала практика, метод средних при обработке данных в реометрии имеет достаточную точность. Вместо довольно громоздкого метода наименьших ' +
+            'квадратов при обработке данных в реометрии с успехом можно использовать гораздо более простой метод средних.</p>' +
+            '<p>Так, если по результатам опытов составлена система из <i>n</i> (число опытов) уравнений для ньютоновской жидкости: <img src="img/Lab_dynamic_viscosity_math_5.png" />.</p>' +
+            '<p>Тогда по методу средних коэффициент динамической вязкости <img src="img/Lab_dynamic_viscosity_math_6.png" />.</p>' +
+            '<p class="small_paragraph">Примечание: в современном табличном процессоре Вы можете построить линию тренда по заданным точкам с указанием ' +
+            'формулы полученного тренда и коэффициента детерминации. Линейная регрессия в таком случае будет построена методом наименьших квадратов (на графике построена). ' +
+            'В этом случае  угловой коэффициент наклона построенной прямой и будет соответствовать искомому коэффициенту динамической вязкости.  </p>' +
+            '<p>Рассчитайте таким образом коэффициент динамической вязкости, подставьте его в соответствующее поле.</p>' +
+            '<p>Следующая задача практикума - стандартная реологическая задача: сконфигурировать трубу (найти её геометрические параметры и ' +
+            'характеристики течения в трубе при ламинарном течении), чтобы достичь требуемого расхода материала.</p>' +
+            '</div>' +
+            '<div class="block_loading"><div class="waiting_loading"><img width="100%" height="100%" src="img/Lab_dynamic_viscosity_hourglass.png"/></div></div>' +
+            '</div>';
 
     function show_help() {
         if (!help_active) {
@@ -291,7 +291,7 @@ function init_lab() {
     function fill_installation(generate_data) {
         $(".tube_length_value").html(generate_data.tube_length);
         $(".density_value").html(generate_data.ro);
-        $(".needed_volume_value").html(generate_data.needed_Q);
+        $(".needed_volume_value").html(generate_data.needed_Q + " +/- 1%");
         init_plot(generate_data.tau_gamma_values, ".block_viscosity_plot svg",
             $(".block_viscosity_plot svg").attr("width"), $(".block_viscosity_plot svg").attr("height"));
         for (var i=0; i < generate_data.tau_gamma_values.length; i++){
@@ -315,7 +315,7 @@ function init_lab() {
         draw_tube($(".tube_canvas"), radius_coefficient, pressure_coefficient);
         $(".block_loading").removeClass("active_waiting");
     }
-    
+
     function launch() {
         freeze_installation();
         ANT.calculate();
