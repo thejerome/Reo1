@@ -30,7 +30,7 @@ public class ToolModel {
             return ZERO;
         }
 
-        return shrink(dividend.divide(divisor, HALF_UP));
+        return dividend.divide(divisor, HALF_UP);
 
     }
 }

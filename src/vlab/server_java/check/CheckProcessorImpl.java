@@ -17,9 +17,7 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
-import static vlab.server_java.model.util.Util.bd;
-import static vlab.server_java.model.util.Util.prepareInputJsonString;
-import static vlab.server_java.model.util.Util.unescapeParam;
+import static vlab.server_java.model.util.Util.*;
 
 /**
  * Simple CheckProcessor implementation. Supposed to be changed as needed to provide
@@ -40,7 +38,7 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
             BigDecimal realMu = new BigDecimal(prepareInputJsonString(generatingResult.getInstructions()));
             BigDecimal realQ = variant.getNeeded_Q();
 
-            BigDecimal solutionQ = ToolModel.getQ(solution.getDelta_p(), solution.getTube_radius(), variant.getTube_length(), realMu);
+            BigDecimal solutionQ = shrink(ToolModel.getQ(solution.getDelta_p(), solution.getTube_radius(), variant.getTube_length(), realMu));
             BigDecimal solutionMu = solution.getMu();
 
             boolean isMuOk = realMu.subtract(solutionMu).compareTo(ZERO) == 0;
